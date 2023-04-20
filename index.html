@@ -75,7 +75,6 @@
     let a, b, equation, sys = false;
     function updateData() {
         a = document.getElementById("a").value;
-        console.log("!!!! " + a)
         b = document.getElementById("b").value;
         equation = document.getElementById("equation").value;
         sys = String(equation).match("{") != null;
@@ -96,13 +95,12 @@
                 setImageSrc
             );
         } else {
-            console.log(equation + "   1 !");
-            console.log("a = " + a + " b = " + b);
+            
             calculator.setExpression({ id: 'graph1', latex: equation });
             calculator.asyncScreenshot(
                 {
                     mode: 'preserveX',
-                    mathBounds: { left: Number(a), right: Number(b) }
+                    mathBounds: { left: Number(a)-2, right: Number(b)+2 }
                 },
                 setImageSrc
             );
