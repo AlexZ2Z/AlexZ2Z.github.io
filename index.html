@@ -7,8 +7,7 @@
         @import url('https://fonts.cdnfonts.com/css/rounds-black');
         body {
             font-family: 'Rounds Black', sans-serif !important;
-            background: rgb(63,94,251);
-            background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+            background: aliceblue;
         }
         tr {
             height: 60px;
@@ -16,8 +15,18 @@
         th, td {
             width: 33.3%;
         }
+        td {
+            border-style: solid;
+            border-color: darkgray;
+            border-width: 2px;
+        }
+        .name {
+            background: #ff0000aa;
+            height: 10px;
+            max-height: 10px;
+        }
         img {
-            box-shadow: 0px 0px 105px #4448;
+            box-shadow: 0 0 105px #4448;
         }
         input, textarea {
             font-family: 'Rounds Black', sans-serif !important;
@@ -40,71 +49,166 @@
 </head>
 <body>
 <table style=" width: 100%; height: 100%; text-align: center; position: fixed">
-        <thead>
-            <tr>
-                <th>Уравнение</th>
-                <th>Левая граница (a)</th>
-                <th>Правая граница (b)</th>
-            </tr>
-        </thead>
+
         <tbody>
-            <tr style="width: 8px">
-                <td><label for="equation"></label><textarea name="equation" id="equation"></textarea></td>
-                <td><label for="a"></label><input name="a" id="a"></td>
-                <td><label for="b"></label><input name="b" id="b"></td>
-            </tr>
-            <tr>
-                <td colspan="3">График</td>
-            </tr>
-            <tr>
-                <td colspan="3"><button id="update" onclick="updateData()">ОБНОВИТЬ</button></td>
-            </tr>
-            <tr>
-                <td colspan="3"><img id="my-image" style="width: 25%"/></td>
-            </tr>
+        <tr>
+            <td colspan="3"><button id="update" onclick="updateData()">ОБНОВИТЬ</button></td>
+        </tr>
+        <tr>
+            <td class="name" id="LINEAR">LINEAR</td>
+            <td class="name" id="QUADRATIC">QUADRATIC</td>
+            <td class="name" id="CUBIC">CUBIC</td>
+        </tr>
+        <tr>
+            <td ><img id="LINEAR-plot" style="width: 25%"/></td>
+            <td ><img id="QUADRATIC-plot" style="width: 25%"/></td>
+            <td ><img id="CUBIC-plot" style="width: 25%"/></td>
+        </tr>
+        <tr>
+            <td class="name" id="POWER">POWER</td>
+            <td class="name" id="EXPONENTIAL">EXPONENTIAL</td>
+            <td class="name" id="LOGARITHMIC">LOGARITHMIC</td>
+        </tr>
+        <tr>
+            <td ><img id="POWER-plot" style="width: 25%"/></td>
+            <td ><img id="EXPONENTIAL-plot" style="width: 25%"/></td>
+            <td ><img id="LOGARITHMIC-plot" style="width: 25%"/></td>
+        </tr>
         </tbody>
     </table>
-<div id="calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id ="data" style="visibility: hidden">
+    <textarea name="minX" id="minX"></textarea>
+    <textarea name="maxX" id="maxX"></textarea>
+    <textarea name="minY" id="minY"></textarea>
+    <textarea name="maxY" id="maxY"></textarea>
+    <textarea name="best" id="best"></textarea>
+    <textarea name="points" id="points"></textarea>
+    <textarea name="LINEAR-data" id="LINEAR-data"></textarea>
+    <textarea name="QUADRATIC-data" id="QUADRATIC-data"></textarea>
+    <textarea name="CUBIC-data" id="CUBIC-data"></textarea>
+    <textarea name="POWER-data" id="POWER-data"></textarea>
+    <textarea name="EXPONENTIAL-data" id="EXPONENTIAL-data"></textarea>
+    <textarea name="LOGARITHMIC-data" id="LOGARITHMIC-data"></textarea>
+
+</div>
+<div id="LINEAR-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id="QUADRATIC-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id="CUBIC-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id="POWER-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id="EXPONENTIAL-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
+<div id="LOGARITHMIC-calculator" style="width: 600px; height: 400px; visibility: hidden;"></div>
 </body>
 <script src="https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
 <script>
-    function setImageSrc(data) {
-        let img = document.getElementById('my-image');
+
+    function setImageSrcLINEAR(data) {
+        let img = document.getElementById('LINEAR-plot');
         img.src = data;
     }
-    let a, b, equation, sys = false;
-    function updateData() {
-        a = document.getElementById("a").value;
-        b = document.getElementById("b").value;
-        equation = document.getElementById("equation").value;
-        sys = String(equation).match("{") != null;
-        updatePlot();
+    function setImageSrcQUADRATIC(data) {
+        let img = document.getElementById('QUADRATIC-plot');
+        img.src = data;
     }
-    let elt = document.getElementById('calculator');
-    let calculator = Desmos.GraphingCalculator(elt, ["projectorMode=true"]);
-    function updatePlot() {
+    function setImageSrcCUBIC(data) {
+        let img = document.getElementById('CUBIC-plot');
+        img.src = data;
+    }
+    function setImageSrcPOWER(data) {
+        let img = document.getElementById('POWER-plot');
+        img.src = data;
+    }
+    function setImageSrcEXPONENTIAL(data) {
+        let img = document.getElementById('LINEAR-plot');
+        img.src = data;
+    }
+    function setImageSrcLOGARITHMIC(data) {
+        let img = document.getElementById('LOGARITHMIC-plot');
+        img.src = data;
+    }
+    let LINEAR, QUADRATIC, CUBIC, POWER, EXPONENTIAL, LOGARITHMIC, best, points, minX, maxX, minY, maxY;
+    let eltLINEAR = document.getElementById('LINEAR-calculator');
+    let eltQUADRATIC = document.getElementById('QUADRATIC-calculator');
+    let eltCUBIC = document.getElementById('CUBIC-calculator');
+    let eltPOWER = document.getElementById('POWER-calculator');
+    let eltEXPONENTIAL = document.getElementById('EXPONENTIAL-calculator');
+    let eltLOGARITHMIC = document.getElementById('LOGARITHMIC-calculator');
+
+    let calculatorLINEAR = Desmos.GraphingCalculator(eltLINEAR, ["projectorMode=true"]);
+    let calculatorQUADRATIC = Desmos.GraphingCalculator(eltQUADRATIC, ["projectorMode=true"]);
+    let calculatorCUBIC = Desmos.GraphingCalculator(eltCUBIC, ["projectorMode=true"]);
+    let calculatorPOWER = Desmos.GraphingCalculator(eltPOWER, ["projectorMode=true"]);
+    let calculatorEXPONENTIAL = Desmos.GraphingCalculator(eltEXPONENTIAL, ["projectorMode=true"]);
+    let calculatorLOGARITHMIC = Desmos.GraphingCalculator(eltLOGARITHMIC, ["projectorMode=true"]);
+
+    function updateData() {
+        clearTheBest();
+        points = document.getElementById("points").value;
+        best = document.getElementById("best").value;
+
+        LINEAR = document.getElementById("LINEAR-data").value;
+        QUADRATIC = document.getElementById("QUADRATIC-data").value;
+        CUBIC = document.getElementById("CUBIC-data").value;
+        POWER = document.getElementById("POWER-data").value;
+        EXPONENTIAL = document.getElementById("EXPONENTIAL-data").value;
+        LOGARITHMIC = document.getElementById("LOGARITHMIC-data").value;
+
+        updatePlot(calculatorLINEAR, LINEAR, points, setImageSrcLINEAR);
+        updatePlot(calculatorQUADRATIC, QUADRATIC, points, setImageSrcQUADRATIC);
+        updatePlot(calculatorCUBIC, CUBIC, points, setImageSrcCUBIC);
+        updatePlot(calculatorPOWER, POWER, points, setImageSrcPOWER);
+        updatePlot(calculatorEXPONENTIAL, EXPONENTIAL, points, setImageSrcEXPONENTIAL);
+        updatePlot(calculatorLOGARITHMIC, LOGARITHMIC, points, setImageSrcLOGARITHMIC);
+        drawTheBest();
+    }
+
+    function updatePlot(calculator, eq, p, setter) {
         calculator.setState();
-        if (sys) {
-            let eq1 = String(equation).split("\n")[0].substring(1), eq2 = String(equation).split("\n")[1].substring(1);
-            calculator.setExpression({ id: 'graph1', latex: eq1 });
-            calculator.setExpression({ id: 'graph2', latex: eq2 });
-            calculator.asyncScreenshot(
-                {
-                    mode: 'preserveX',
-                },
-                setImageSrc
-            );
-        } else {
-            
-            calculator.setExpression({ id: 'graph1', latex: equation });
-            calculator.asyncScreenshot(
-                {
-                    mode: 'preserveX',
-                    mathBounds: { left: Number(a)-2, right: Number(b)+2 }
-                },
-                setImageSrc
-            );
+        calculator.setExpression({ id: 'graph1', latex: eq });
+        calculator.setExpression({ id: 'graph2', latex: p });
+        calculator.asyncScreenshot(
+            {
+                mode: 'preserveX',
+                "mathBounds": {
+                    "bottom": minY-2,
+                    "top": maxY+2,
+                    "left": minX-2,
+                    "right": maxX+2
+                }
+            },
+            setter
+        );
+
+    }
+    function drawTheBest() {
+        switch (best) {
+            case 1:
+                document.getElementById("LINEAR").style.background = "#00ff00aa";
+                break;
+            case 2:
+                document.getElementById("QUADRATIC").style.background = "#00ff00aa";
+                break;
+            case 3:
+                document.getElementById("CUBIC").style.background = "#00ff00aa";
+                break;
+            case 4:
+                document.getElementById("POWER").style.background = "#00ff00aa";
+                break;
+            case 5:
+                document.getElementById("EXPONENTIAL").style.background = "#00ff00aa";
+                break;
+            default:
+                document.getElementById("LINEAR").style.background = "#00ff00aa";
         }
+    }
+
+    function clearTheBest() {
+        document.getElementById("LINEAR").style.background = "#ff0000aa";
+        document.getElementById("QUADRATIC").style.background = "#ff0000aa";
+        document.getElementById("CUBIC").style.background = "#ff0000aa";
+        document.getElementById("POWER").style.background = "#ff0000aa";
+        document.getElementById("EXPONENTIAL").style.background = "#ff0000aa";
+        document.getElementById("LOGARITHMIC").style.background = "#ff0000aa";
+
     }
 
 
