@@ -144,7 +144,7 @@
     function updateData() {
         clearTheBest();
         points = document.getElementById("points").value;
-        best = document.getElementById("best").value;
+        best = parseInt(document.getElementById("best").value);
 
         maxX = parseFloat(document.getElementById("maxX").value)+2
         minX = parseFloat(document.getElementById("minX").value)-2
