@@ -146,10 +146,10 @@
         points = document.getElementById("points").value;
         best = document.getElementById("best").value;
 
-        maxX = document.getElementById("maxX")
-        minX = document.getElementById("minX")
-        maxY = document.getElementById("maxY")
-        minY = document.getElementById("minY")
+        maxX = document.getElementById("maxX")+2
+        minX = document.getElementById("minX")-2
+        maxY = document.getElementById("maxY")+2
+        minY = document.getElementById("minY")-2
 
         LINEAR = document.getElementById("LINEAR-data").value;
         QUADRATIC = document.getElementById("QUADRATIC-data").value;
@@ -174,10 +174,10 @@
         calculator.asyncScreenshot(
             {
                 "mathBounds": {
-                    "left": minX-2,
-                    "right": maxX+2,
-                    "bottom": minY-2,
-                    "top": maxY+2
+                    "left": minX,
+                    "right": maxX,
+                    "bottom": minY,
+                    "top": maxY
                 }
             },
             setter
