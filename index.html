@@ -171,6 +171,7 @@
         calculator.setState();
         calculator.setExpression({ id: 'graph1', latex: eq });
         calculator.setExpression({ id: 'graph2', latex: p });
+        console.log(minX, maxX, minY, maxY)
         calculator.asyncScreenshot(
             {
                 "mathBounds": {
